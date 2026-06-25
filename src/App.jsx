@@ -76,7 +76,7 @@ function App() {
           ) : (
             <div className="card-back">
               <span className="badge">{tarjetaActual.categoria}</span>
-              <h3>Lectura: {tarjetaActual.kana} ({tarjetaActual.romaji})</h3>
+              <h3>{tarjetaActual.kana} ({tarjetaActual.romaji})</h3>
               <h2 className="meaning">{tarjetaActual.significado_es}</h2>
               <p className="hint">Haz clic para regresar</p>
             </div>

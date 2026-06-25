@@ -5,7 +5,7 @@
     "kana": "ねこ",
     "romaji": "neko",
     "significado_es": "Gato",
-    "categoria": "Animales",
+    "categoria": "vida diaria",
     "imagen_url": "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=500"
   },
   {
@@ -14,7 +14,7 @@
     "kana": "いぬ",
     "romaji": "inu",
     "significado_es": "Perro",
-    "categoria": "Animales",
+    "categoria": "vida diaria",
     "imagen_url": "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=500"
   },
   {
@@ -23,7 +23,7 @@
     "kana": "みず",
     "romaji": "mizu",
     "significado_es": "Agua",
-    "categoria": "Comida y Bebida",
+    "categoria": "vida diaria",
     "imagen_url": "https://images.unsplash.com/photo-1548858860-8224e4de3a64?w=500"
   },
   {
@@ -32,7 +32,7 @@
     "kana": "ごはん",
     "romaji": "gohan",
     "significado_es": "Arroz / Comida",
-    "categoria": "Comida y Bebida",
+    "categoria": "vida diaria",
     "imagen_url": "https://images.unsplash.com/photo-1536304997881-a372c179924b?w=500"
   },
   {
@@ -50,7 +50,7 @@
     "kana": "たべる",
     "romaji": "taberu",
     "significado_es": "Comer",
-    "categoria": "Verbos",
+    "categoria": "vida diaria",
     "imagen_url": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=500"
   },
   {
@@ -59,7 +59,7 @@
     "kana": "いく",
     "romaji": "iku",
     "significado_es": "Ir",
-    "categoria": "Verbos",
+    "categoria": "vida diaria",
     "imagen_url": "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=500"
   },
   {
@@ -68,7 +68,7 @@
     "kana": "こんにちは",
     "romaji": "konnichiwa",
     "significado_es": "Hola / Buenas tardes",
-    "categoria": "Saludos",
+    "categoria": "vida diaria",
     "imagen_url": "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=500"
   }
 ]

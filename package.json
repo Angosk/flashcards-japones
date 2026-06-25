@@ -12,6 +12,8 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "dotenv": "^17.4.2",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   },
