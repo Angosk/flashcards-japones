@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "kanji": "猫",
+    "kana": "ねこ",
+    "romaji": "neko",
+    "significado_es": "Gato",
+    "search_term_en": "cat",
+    "imagen_url": "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=500"
+  },
+  {
+    "id": 2,
+    "kanji": "犬",
+    "kana": "いぬ",
+    "romaji": "inu",
+    "significado_es": "Perro",
+    "search_term_en": "dog",
+    "imagen_url": "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=500"
+  },
+  {
+    "id": 3,
+    "kanji": "水",
+    "kana": "みず",
+    "romaji": "mizu",
+    "significado_es": "Agua",
+    "search_term_en": "water",
+    "imagen_url": "https://images.unsplash.com/photo-1548858860-8224e4de3a64?w=500"
+  }
+]
