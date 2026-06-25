@@ -3,20 +3,27 @@ import data from './vocabulario.json';
 import './App.css';
 
 function App() {
-  // Estado para saber en qué tarjeta estamos
+  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('Todos');
   const [indiceActual, setIndiceActual] = useState(0);
-  
-  // Estado para saber si la tarjeta está volteada (false = frente, true = vuelta)
   const [volteada, setVolteada] = useState(false);
 
-  const tarjetaActual = data[indiceActual];
+  // 1. Extraer todas las categorías únicas del JSON dinámicamente
+  const categorias = ['Todos', ...new Set(data.map(item => item.categoria))];
+
+  // 2. Filtrar el dataset según la categoría seleccionada
+  const datosFiltrados = categoriaSeleccionada === 'Todos' 
+    ? data 
+    : data.filter(item => item.categoria === categoriaSeleccionada);
+
+  // Evitar errores si cambiamos a una categoría vacía o si el índice se sale de rango
+  const tarjetaActual = datosFiltrados[indiceActual] || datosFiltrados[0];
 
   const siguienteTarjeta = () => {
-    setVolteada(false); // Reiniciar al frente para la siguiente tarjeta
-    if (indiceActual < data.length - 1) {
+    setVolteada(false);
+    if (indiceActual < datosFiltrados.length - 1) {
       setIndiceActual(indiceActual + 1);
     } else {
-      setIndiceActual(0); // Reinicia al principio si llega al final
+      setIndiceActual(0);
     }
   };
 
@@ -25,41 +32,63 @@ function App() {
     if (indiceActual > 0) {
       setIndiceActual(indiceActual - 1);
     } else {
-      setIndiceActual(data.length - 1); // Va a la última si retrocede desde la primera
+      setIndiceActual(datosFiltrados.length - 1);
     }
+  };
+
+  const cambiarCategoria = (cat) => {
+    setCategoriaSeleccionada(cat);
+    setIndiceActual(0); // Reiniciar al primer elemento de la nueva categoría
+    setVolteada(false);
   };
 
   return (
     <div className="app-container">
-      <h1>🇯🇵 Flashcards de Japonés</h1>
+      <h1>🇯🇵 Flashcards Esenciales</h1>
+      <p className="subtitle">El núcleo de las 1000 palabras más usadas</p>
       
-      {/* Contenedor de la tarjeta interactiva */}
-      <div 
-        className={`flashcard ${volteada ? 'volteada' : ''}`} 
-        onClick={() => setVolteada(!volteada)}
-      >
-        {!volteada ? (
-          // FRENTE DE LA TARJETA
-          <div className="card-front">
-            <img src={tarjetaActual.imagen_url} alt={tarjetaActual.search_term_en} />
-            <h2>{tarjetaActual.kanji}</h2>
-            <p className="hint">Haz clic para voltear</p>
-          </div>
-        ) : (
-          // VUELTA DE LA TARJETA
-          <div className="card-back">
-            <h3>Lectura: {tarjetaActual.kana} ({tarjetaActual.romaji})</h3>
-            <h2 className="meaning">{tarjetaActual.significado_es}</h2>
-            <p className="hint">Haz clic para regresar</p>
-          </div>
-        )}
+      {/* Selector de Categorías */}
+      <div className="category-tabs">
+        {categorias.map(cat => (
+          <button 
+            key={cat} 
+            className={`tab-button ${categoriaSeleccionada === cat ? 'active' : ''}`}
+            onClick={() => cambiarCategoria(cat)}
+          >
+            {cat}
+          </button>
+        ))}
       </div>
 
-      {/* Controles de navegación */}
+      {/* Tarjeta */}
+      {tarjetaActual && (
+        <div 
+          className={`flashcard ${volteada ? 'volteada' : ''}`} 
+          onClick={() => setVolteada(!volteada)}
+        >
+          {!volteada ? (
+            <div className="card-front">
+              <span className="badge">{tarjetaActual.categoria}</span>
+              <img src={tarjetaActual.imagen_url} alt={tarjetaActual.significado_es} />
+              <h2>{tarjetaActual.kanji}</h2>
+              <p className="hint">Haz clic para voltear</p>
+            </div>
+          ) : (
+            <div className="card-back">
+              <span className="badge">{tarjetaActual.categoria}</span>
+              <h3>Lectura: {tarjetaActual.kana} ({tarjetaActual.romaji})</h3>
+              <h2 className="meaning">{tarjetaActual.significado_es}</h2>
+              <p className="hint">Haz clic para regresar</p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Controles */}
       <div className="controls">
-        <button onClick={anteriorTarjeta}>Anterior</button>
-        <span>{indiceActual + 1} / {data.length}</span>
-        <button onClick={siguienteTarjeta}>Siguiente</button>
+        <button className="nav-btn" onClick={anteriorTarjeta}>Anterior</button>
+        <span>{indiceActual + 1} / {datosFiltrados.length}</span>
+        <button className="nav-btn" onClick={siguienteTarjeta}>Siguiente</button>
       </div>
     </div>
   );
