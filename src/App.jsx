@@ -2,15 +2,26 @@ import React, { useState, useEffect } from 'react';
 import vocabularioData from './vocabulario.json';
 import './App.css';
 
+// Función utilitaria para mezclar un mazo (Algoritmo Fisher-Yates)
+const mezclarMazo = (arreglo) => {
+  const copia = [...arreglo];
+  for (let i = copia.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copia[i], copia[j]] = [copia[j], copia[i]];
+  }
+  return copia;
+};
+
 function App() {
   // 1. Estados principales de navegación y datos
   const [data, setData] = useState(vocabularioData);
   const [categoriaActiva, setCategoriaActiva] = useState('Todos');
   const [indexActual, setIndexActual] = useState(0);
   const [volteada, setVolteada] = useState(false);
-
-  // Nuevo estado para filtrar por progreso ('Todos', '1', '2', '3')
   const [filtroProgreso, setFiltroProgreso] = useState('Todos');
+
+  // Estado para guardar las tarjetas que pasaron el filtro pero YA MEZCLADAS
+  const [tarjetasFiltradas, setTarjetasFiltradas] = useState([]);
 
   // 2. Estado del Sistema de Progresión (Cajas)
   const [progresoCajas, setProgresoCajas] = useState(() => {
@@ -25,17 +36,20 @@ function App() {
   // Opciones de categorías primarias
   const categorias = ['Todos', ...new Set(data.map(item => item.categoria))];
 
-  // 3. LOGICA DE FILTRADO COMBINADO (Categoría + Progreso Leitner)
-  const tarjetasFiltradas = data.filter(item => {
-    // Primero evaluamos la categoría
-    const pasaCategoria = categoriaActiva === 'Todos' || item.categoria === categoriaActiva;
-    
-    // Luego evaluamos la caja de progreso asignada
-    const cajaAsignada = progresoCajas[item.id] || 1; // Por defecto Caja 1
-    const pasaProgreso = filtroProgreso === 'Todos' || cajaAsignada === parseInt(filtroProgreso);
+  // 3. NUEVO EFECTO: Filtra y mezcla aleatoriamente cada vez que cambien los filtros o las cajas
+  useEffect(() => {
+    const filtradas = data.filter(item => {
+      const pasaCategoria = categoriaActiva === 'Todos' || item.categoria === categoriaActiva;
+      const cajaAsignada = progresoCajas[item.id] || 1;
+      const pasaProgreso = filtroProgreso === 'Todos' || cajaAsignada === parseInt(filtroProgreso);
+      return pasaCategoria && pasaProgreso;
+    });
 
-    return pasaCategoria && pasaProgreso;
-  });
+    // Guardamos el resultado mezclado aleatoriamente
+    setTarjetasFiltradas(mezclarMazo(filtradas));
+    setIndexActual(0);
+    setVolteada(false);
+  }, [categoriaActiva, filtroProgreso, progresoCajas, data]);
 
   const tarjetaActual = tarjetasFiltradas[indexActual];
 
@@ -71,8 +85,7 @@ function App() {
       [id]: nuevaCaja
     }));
 
-    // Si al cambiar de caja la tarjeta ya no cumple con el filtro activo, 
-    // la navegación se ajusta automáticamente.
+    // Sutil retraso para pasar a la siguiente carta de manera fluida
     setTimeout(() => {
       if (tarjetasFiltradas.length > 1) {
         siguienteTarjeta();
@@ -92,33 +105,26 @@ function App() {
 
   return (
     <div className="app-container">
-      <header>
-      </header>
-
       {/* Menú Superior: Categorías Temáticas */}
       <nav className="categories-nav">
         {categorias.map(cat => (
           <button
             key={cat}
             className={`nav-btn ${categoriaActiva === cat ? 'active' : ''}`}
-            onClick={() => {
-              setCategoriaActiva(cat);
-              setIndexActual(0);
-              setVolteada(false);
-            }}
+            onClick={() => setCategoriaActiva(cat)} // Simplificado: El useEffect maneja el reinicio
           >
             {cat}
           </button>
         ))}
       </nav>
 
-      {/* NUEVO Menú Desplegable: Filtros de Progreso Leitner */}
+      {/* Tu nuevo Menú Desplegable con select */}
       <div className="progreso-nav">
         <label className="filter-label" htmlFor="progreso-select">Progreso:</label>
         <select
           id="progreso-select"
           value={filtroProgreso}
-          onChange={(e) => { setFiltroProgreso(e.target.value); setIndexActual(0); setVolteada(false); }}
+          onChange={(e) => setFiltroProgreso(e.target.value)} // Simplificado: El useEffect maneja el reinicio
           className="progreso-select"
         >
           <option value="Todos">Todo el set</option>
@@ -128,10 +134,10 @@ function App() {
         </select>
       </div>
 
-      {/* Contador e Indicador de Progreso Interno */}
-      {tarjetasFiltradas.length > 0 && (
+      {/* Contador con indicador aleatorio 🔀 */}
+      {tarjetasFiltradas.length > 0 && tarjetaActual && (
         <div className="progress-info">
-          <span>Tarjeta {indexActual + 1} de {tarjetasFiltradas.length}</span>
+          <span>Tarjeta {indexActual + 1} de {tarjetasFiltradas.length} 🔀</span>
           <span className="box-badge">Estado: {obtenerNivelCaja(tarjetaActual.id)}</span>
         </div>
       )}
@@ -169,7 +175,7 @@ function App() {
         </div>
       )}
 
-      {/* Controles Inferiores */}
+      {/* Tus nuevos Controles Inferiores Minimalistas */}
       {tarjetasFiltradas.length > 0 && (
         <div className="controls-container">
           <button className="control-btn nav" onClick={anteriorTarjeta}>◀</button>
