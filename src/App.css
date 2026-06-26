@@ -82,55 +82,6 @@ h1 {
   margin-bottom: 0;
 }
 
-.controls {
-  margin-top: 30px;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-button {
-  background-color: #0071e3;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #0077ed;
-}
-.subtitle {
-  color: #86868b;
-  margin-top: -10px;
-  margin-bottom: 25px;
-}
-
-.category-tabs {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 25px;
-  flex-wrap: wrap;
-  justify-content: center;
-  max-width: 600px;
-}
-
-.tab-button {
-  background-color: #e8e8ed;
-  color: #1d1d1f;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 0.9rem;
-  transition: all 0.2s ease;
-}
-
-.tab-button.active {
-  background-color: #0071e3;
-  color: white;
-}
-
 .badge {
   position: absolute;
   top: 15px;
@@ -141,10 +92,6 @@ button:hover {
   font-size: 0.75rem;
   font-weight: bold;
   color: #86868b;
-}
-
-.flashcard {
-  position: relative; /* Para acomodar el badge */
 }
 
 .kanji-main {
@@ -207,12 +154,10 @@ button:hover {
 /* Contenedor de Mandos */
 .controls-container {
   display: flex;
-    width: 480px;
-    margin: 20px auto;
-    gap: 10px;
-    flex-wrap: nowrap;
-    flex-direction: row;
-    justify-content: center;
+  margin: 20px auto;
+  gap: 40px;
+  flex-wrap: nowrap;
+  justify-content: center;
 }
 
 .control-btn.nav {
@@ -294,31 +239,122 @@ button:hover {
   margin: 20px auto;
 }
 
-/* Estilo base para todos los botones de categoría */
+/* Estilo base para los botones de categoría */
 .nav-btn {
   background-color: #f5f5f7;
   color: #1d1d1f;
   border: 1px solid #d2d2d7;
   padding: 8px 16px;
-  border-radius: 20px; /* Bordes redondeados tipo píldora */
+  border-radius: 20px;
   font-size: 0.95rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Estilo base para los filtros de progreso */
+.progreso-btn {
+  background: transparent;
+  border: none;
+  color: #515154;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
 /* Efecto hover al pasar el mouse por encima (solo inactivos) */
-.nav-btn:hover:not(.active) {
+.nav-btn:hover:not(.active),
+.progreso-btn:hover:not(.active) {
   background-color: #e8e8ed;
+  color: #1d1d1f;
   border-color: #86868b;
 }
 
-/* ESTADO ACTIVO: Destaca la categoría seleccionada */
+/* ESTADO ACTIVO de categorías */
 .nav-btn.active {
-  background-color: #0071e3; /* Azul eléctrico Apple */
-  color: #ffffff;            /* Texto blanco para alto contraste */
+  background-color: #0071e3;
+  color: #ffffff;
   border-color: #0071e3;
   font-weight: 600;
-  box-shadow: 0 4px 12px rgba(0, 113, 227, 0.25); /* Sutil brillo azul */
+  box-shadow: 0 4px 12px rgba(0, 113, 227, 0.25);
   transform: scale(1.02);
+}
+
+/* Barra de Filtros de Progreso */
+.progreso-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin: -5px auto 25px auto;
+  background-color: #f5f7fb;
+  padding: 10px 14px;
+  border-radius: 30px;
+  max-width: calc(100vw - 40px);
+  box-sizing: border-box;
+}
+
+.filter-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #86868b;
+  margin-right: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.progreso-select {
+  border: 1px solid #d2d2d7;
+  border-radius: 20px;
+  padding: 10px 14px;
+  background-color: #ffffff;
+  color: #1d1d1f;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  min-width: 220px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.progreso-select:hover,
+.progreso-select:focus {
+  border-color: #86868b;
+  box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.08);
+}
+
+.progreso-select:focus {
+  outline: none;
+}
+
+/* Estado Activo para los Filtros de Progreso (Gris oscuro estilo Apple) */
+.progreso-btn.active {
+  background-color: #1d1d1f;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* Mensajes en pantalla cuando el filtro está vacío */
+.no-data-container {
+  text-align: center;
+  padding: 60px 20px;
+  background: #ffffff;
+  border: 1px dashed #d2d2d7;
+  border-radius: 20px;
+  margin: 40px auto;
+}
+
+.no-data {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1d1d1f;
+  margin-bottom: 8px;
+}
+
+.no-data-sub {
+  font-size: 0.9rem;
+  color: #86868b;
 }

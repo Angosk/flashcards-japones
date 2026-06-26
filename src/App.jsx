@@ -3,58 +3,66 @@ import vocabularioData from './vocabulario.json';
 import './App.css';
 
 function App() {
-  // 1. Estados principales de navegación
+  // 1. Estados principales de navegación y datos
   const [data, setData] = useState(vocabularioData);
   const [categoriaActiva, setCategoriaActiva] = useState('Todos');
   const [indexActual, setIndexActual] = useState(0);
   const [volteada, setVolteada] = useState(false);
 
+  // Nuevo estado para filtrar por progreso ('Todos', '1', '2', '3')
+  const [filtroProgreso, setFiltroProgreso] = useState('Todos');
+
   // 2. Estado del Sistema de Progresión (Cajas)
-  // Estructura en localStorage: { "id_tarjeta": numero_de_caja }
   const [progresoCajas, setProgresoCajas] = useState(() => {
     const guardado = localStorage.getItem('progreso_flashcards_jp');
     return guardado ? JSON.parse(guardado) : {};
   });
 
-  // Guardar en localStorage automáticamente cada vez que cambie el progreso
   useEffect(() => {
     localStorage.setItem('progreso_flashcards_jp', JSON.stringify(progresoCajas));
   }, [progresoCajas]);
 
-  // 3. Filtrar datos por categoría y por caja si se desea (Dinámico)
+  // Opciones de categorías primarias
   const categorias = ['Todos', ...new Set(data.map(item => item.categoria))];
-  
+
+  // 3. LOGICA DE FILTRADO COMBINADO (Categoría + Progreso Leitner)
   const tarjetasFiltradas = data.filter(item => {
-    if (categoriaActiva === 'Todos') return true;
-    return item.categoria === categoriaActiva;
+    // Primero evaluamos la categoría
+    const pasaCategoria = categoriaActiva === 'Todos' || item.categoria === categoriaActiva;
+    
+    // Luego evaluamos la caja de progreso asignada
+    const cajaAsignada = progresoCajas[item.id] || 1; // Por defecto Caja 1
+    const pasaProgreso = filtroProgreso === 'Todos' || cajaAsignada === parseInt(filtroProgreso);
+
+    return pasaCategoria && pasaProgreso;
   });
 
   const tarjetaActual = tarjetasFiltradas[indexActual];
 
   // 4. Funciones de Navegación Segura
   const siguienteTarjeta = () => {
+    if (tarjetasFiltradas.length <= 1) return;
     setVolteada(false);
     setIndexActual((prev) => (prev + 1) % tarjetasFiltradas.length);
   };
 
   const anteriorTarjeta = () => {
+    if (tarjetasFiltradas.length <= 1) return;
     setVolteada(false);
     setIndexActual((prev) => (prev - 1 + tarjetasFiltradas.length) % tarjetasFiltradas.length);
   };
 
-  // 5. Manejo del Sistema Leitner (Calificación)
+  // 5. Manejo del Sistema Leitner
   const clasificarTarjeta = (acerto) => {
     if (!tarjetaActual) return;
     
     const id = tarjetaActual.id;
-    const cajaActual = progresoCajas[id] || 1; // Si no existe, está en Caja 1
+    const cajaActual = progresoCajas[id] || 1;
 
     let nuevaCaja = cajaActual;
     if (acerto) {
-      // Sube de caja hasta un máximo de la Caja 3 (Dominada)
       nuevaCaja = Math.min(cajaActual + 1, 3);
     } else {
-      // Si falla, regresa directo a la Caja 1
       nuevaCaja = 1;
     }
 
@@ -63,16 +71,20 @@ function App() {
       [id]: nuevaCaja
     }));
 
-    // Pasar automáticamente a la siguiente tarjeta para agilizar el estudio
+    // Si al cambiar de caja la tarjeta ya no cumple con el filtro activo, 
+    // la navegación se ajusta automáticamente.
     setTimeout(() => {
-      siguienteTarjeta();
+      if (tarjetasFiltradas.length > 1) {
+        siguienteTarjeta();
+      } else {
+        setIndexActual(0);
+        setVolteada(false);
+      }
     }, 300);
   };
 
-  // Obtener la caja visual de la tarjeta actual para el indicador
-  const obtenerNivelCaja = () => {
-    if (!tarjetaActual) return 'Por aprender';
-    const caja = progresoCajas[tarjetaActual.id] || 1;
+  const obtenerNivelCaja = (idTarget) => {
+    const caja = progresoCajas[idTarget] || 1;
     if (caja === 2) return 'En progreso ⏳';
     if (caja === 3) return '¡Dominada! 🎖️';
     return 'Por aprender 🆕';
@@ -81,11 +93,9 @@ function App() {
   return (
     <div className="app-container">
       <header>
-        {/* <h1>🇯🇵 Flashcards Esenciales</h1>
-        <p>Domina el japonés para Viaje, Vida Diaria y Trabajo</p> */}
       </header>
 
-      {/* Menú de Categorías */}
+      {/* Menú Superior: Categorías Temáticas */}
       <nav className="categories-nav">
         {categorias.map(cat => (
           <button
@@ -102,23 +112,37 @@ function App() {
         ))}
       </nav>
 
-      {/* Contador e Indicador de Progreso Interno de la Tarjeta */}
+      {/* NUEVO Menú Desplegable: Filtros de Progreso Leitner */}
+      <div className="progreso-nav">
+        <label className="filter-label" htmlFor="progreso-select">Progreso:</label>
+        <select
+          id="progreso-select"
+          value={filtroProgreso}
+          onChange={(e) => { setFiltroProgreso(e.target.value); setIndexActual(0); setVolteada(false); }}
+          className="progreso-select"
+        >
+          <option value="Todos">Todo el set</option>
+          <option value="1">🆕 Por aprender</option>
+          <option value="2">⏳ En progreso</option>
+          <option value="3">🎖️ Dominadas</option>
+        </select>
+      </div>
+
+      {/* Contador e Indicador de Progreso Interno */}
       {tarjetasFiltradas.length > 0 && (
         <div className="progress-info">
           <span>Tarjeta {indexActual + 1} de {tarjetasFiltradas.length}</span>
-          <span className="box-badge">Estado: {obtenerNivelCaja()}</span>
+          <span className="box-badge">Estado: {obtenerNivelCaja(tarjetaActual.id)}</span>
         </div>
       )}
 
-      {/* Tarjeta con Animación 3D */}
+      {/* Renderizado de la Tarjeta */}
       {tarjetaActual ? (
         <div 
           className={`flashcard-container ${volteada ? 'volteada' : ''}`} 
           onClick={() => setVolteada(!volteada)}
         >
           <div className="flashcard-inner">
-            
-            {/* LADO FRONTAL */}
             <div className="card-front">
               <span className="badge">{tarjetaActual.categoria}</span>
               <h2 className="kanji-main">{tarjetaActual.kanji}</h2>
@@ -126,7 +150,6 @@ function App() {
               <p className="hint">Haz clic para voltear</p>
             </div>
 
-            {/* LADO REVERSO */}
             <div className="card-back">
               <span className="badge">{tarjetaActual.categoria}</span>
               <div className="readings-container">
@@ -137,25 +160,26 @@ function App() {
               <h2 className="meaning-main">{tarjetaActual.significado_es}</h2>
               <p className="hint">Haz clic para regresar</p>
             </div>
-
           </div>
         </div>
       ) : (
-        <p className="no-data">No hay palabras en esta categoría.</p>
+        <div className="no-data-container">
+          <p className="no-data">No tienes tarjetas en esta sección de progreso actualmente.</p>
+          <p className="no-data-sub">Prueba cambiando el filtro de arriba o sigue estudiando el mazo completo.</p>
+        </div>
       )}
 
-      {/* Controles de Navegación y Calificación */}
+      {/* Controles Inferiores */}
       {tarjetasFiltradas.length > 0 && (
         <div className="controls-container">
           <button className="control-btn nav" onClick={anteriorTarjeta}>◀</button>
           
-          {/* Botones de Progresión Leitner */}
           <div className="leitner-actions">
             <button className="leitner-btn wrong" onClick={(e) => { e.stopPropagation(); clasificarTarjeta(false); }}>
-              😓
+              ❌
             </button>
             <button className="leitner-btn correct" onClick={(e) => { e.stopPropagation(); clasificarTarjeta(true); }}>
-              👍
+              ✅
             </button>
           </div>
 
