@@ -1,5 +1,5 @@
 h1 {
-  font-size: 2rem;
+  font-size: 1.2rem;
   margin-bottom: 10px;
   color: #1d1d1f;
 }
@@ -15,39 +15,71 @@ h1 {
   padding: 20px;
 }
 
-.flashcard {
-  width: 300px;
-  height: 400px;
-  background-color: white;
-  border-radius: 18px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+/* Contenedor principal que maneja la perspectiva 3D */
+.flashcard-container {
+  background-color: transparent;
+  width: 350px;
+  height: 450px;
+  perspective: 1000px; /* Determina qué tan marcado es el efecto 3D */
+  cursor: pointer;
+  margin: 20px auto;
+}
+
+/* El elemento interno que va a girar de verdad */
+.flashcard-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); /* Giro suave de estilo Apple */
+  transform-style: preserve-3d;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border-radius: 20px;
+}
+
+/* Cuando se añade la clase .volteada, rota el contenedor interno 180 grados */
+.flashcard-container.volteada .flashcard-inner {
+  transform: rotateY(180deg);
+}
+
+/* Propiedades comunes para ambas caras de la tarjeta */
+.card-front, .card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden; /* Oculta la cara trasera mientras gira */
+  backface-visibility: hidden;
+  border-radius: 20px;
+  background-color: #ffffff;
+  border: 1px solid #e8e8ed;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 20px;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  text-align: center;
+  padding: 25px;
+  box-sizing: border-box;
 }
 
-.flashcard:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+/* El reverso debe estar rotado por defecto para que al girar quede al derecho */
+.card-back {
+  transform: rotateY(180deg);
+  background-color: #f5f5f7; /* Un tono ligeramente diferente para el reverso */
 }
 
-.flashcard img {
+/* Ajustes para la imagen dentro del frente */
+.card-front img {
   width: 100%;
-  height: 200px;
-  object-fit: cover;
+  height: 180px;
+  object-fit: crop;
   border-radius: 12px;
-  margin-bottom: 20px;
+  margin-top: 15px;
 }
 
+/* Texto de ayuda en la parte inferior */
 .hint {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: #86868b;
-  margin-top: auto;
+  margin-bottom: 0;
 }
 
 .controls {
@@ -113,4 +145,42 @@ button:hover {
 
 .flashcard {
   position: relative; /* Para acomodar el badge */
+}
+
+.kanji-main {
+  font-size: 3.5rem;
+  margin: 10px 0 5px 0;
+  font-weight: 700;
+  color: #1d1d1f;
+}
+
+.kana-sub {
+  font-size: 1.5rem;
+  color: #86868b;
+  margin: 0 0 15px 0;
+}
+
+.readings-container {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.reading-item {
+  font-size: 1.2rem;
+  margin: 5px 0;
+  color: #1d1d1f;
+}
+
+.card-divider {
+  border: 0;
+  height: 1px;
+  background: #e8e8ed;
+  margin: 20px auto;
+  width: 80%;
+}
+
+.meaning-main {
+  font-size: 2.2rem;
+  color: #0071e3;
+  margin-top: 10px;
 }

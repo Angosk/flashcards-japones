@@ -60,27 +60,35 @@ function App() {
         ))}
       </div>
 
-      {/* Tarjeta */}
+      {/* Tarjeta con Animación 3D */}
       {tarjetaActual && (
         <div 
-          className={`flashcard ${volteada ? 'volteada' : ''}`} 
+          className={`flashcard-container ${volteada ? 'volteada' : ''}`} 
           onClick={() => setVolteada(!volteada)}
         >
-          {!volteada ? (
+          <div className="flashcard-inner">
+            
+            {/* LADO FRONTAL */}
             <div className="card-front">
               <span className="badge">{tarjetaActual.categoria}</span>
-              <img src={tarjetaActual.imagen_url} alt={tarjetaActual.significado_es} />
-              <h2>{tarjetaActual.kanji}</h2>
-              <p className="hint">Haz clic para voltear</p>
+              <h2 className="kanji-main">{tarjetaActual.kanji}</h2>
+              <p className="kana-sub">{tarjetaActual.kana}</p>
+              <p className="hint">Haz clic para ver el significado</p>
             </div>
-          ) : (
+
+            {/* LADO REVERSO */}
             <div className="card-back">
               <span className="badge">{tarjetaActual.categoria}</span>
-              <h3>{tarjetaActual.kana} ({tarjetaActual.romaji})</h3>
-              <h2 className="meaning">{tarjetaActual.significado_es}</h2>
+              <div className="readings-container">
+                <p className="reading-item"><strong>Lectura:</strong> {tarjetaActual.kana}</p>
+                <p className="reading-item"><strong>Rōmaji:</strong> <em>{tarjetaActual.romaji}</em></p>
+              </div>
+              <hr className="card-divider" />
+              <h2 className="meaning-main">{tarjetaActual.significado_es}</h2>
               <p className="hint">Haz clic para regresar</p>
             </div>
-          )}
+
+          </div>
         </div>
       )}
 
