@@ -184,3 +184,141 @@ button:hover {
   color: #0071e3;
   margin-top: 10px;
 }
+
+/* Información de Progreso */
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 350px;
+  margin: 10px auto 0 auto;
+  font-size: 0.9rem;
+  color: #86868b;
+}
+
+.box-badge {
+  background-color: #e8e8ed;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-weight: 500;
+  color: #1d1d1f;
+}
+
+/* Contenedor de Mandos */
+.controls-container {
+  display: flex;
+    width: 480px;
+    margin: 20px auto;
+    gap: 10px;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.control-btn.nav {
+  background-color: #f5f5f7;
+  border: 1px solid #d2d2d7;
+  color: #1d1d1f;
+  padding: 10px 15px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.control-btn.nav:hover {
+  background-color: #e8e8ed;
+}
+
+/* Acciones del Sistema Leitner */
+.leitner-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.leitner-btn {
+  border: none;
+  padding: 12px 24px;
+  border-radius: 14px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  opacity: 0.7;
+}
+
+.leitner-btn:hover {
+  opacity: 1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.leitner-btn:active {
+  transform: scale(0.95);
+}
+
+.leitner-btn.wrong {
+  background-color: #ffeef0;
+  color: #ff3b30;
+  border: 2px solid #ffccd1;
+}
+
+.leitner-btn.wrong.active,
+.leitner-btn.wrong:focus {
+  opacity: 1;
+  background-color: #ffd6da;
+  box-shadow: 0 4px 16px rgba(255, 59, 48, 0.3);
+  border: 2px solid #ff3b30;
+}
+
+.leitner-btn.correct {
+  background-color: #e6f9f0;
+  color: #34c759;
+  border: 2px solid #c7f3d6;
+}
+
+.leitner-btn.correct.active,
+.leitner-btn.correct:focus {
+  opacity: 1;
+  background-color: #d1f7e2;
+  box-shadow: 0 4px 16px rgba(52, 199, 89, 0.3);
+  border: 2px solid #34c759;
+}
+
+/* Contenedor del Menú de Categorías */
+.categories-nav {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px auto;
+}
+
+/* Estilo base para todos los botones de categoría */
+.nav-btn {
+  background-color: #f5f5f7;
+  color: #1d1d1f;
+  border: 1px solid #d2d2d7;
+  padding: 8px 16px;
+  border-radius: 20px; /* Bordes redondeados tipo píldora */
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Efecto hover al pasar el mouse por encima (solo inactivos) */
+.nav-btn:hover:not(.active) {
+  background-color: #e8e8ed;
+  border-color: #86868b;
+}
+
+/* ESTADO ACTIVO: Destaca la categoría seleccionada */
+.nav-btn.active {
+  background-color: #0071e3; /* Azul eléctrico Apple */
+  color: #ffffff;            /* Texto blanco para alto contraste */
+  border-color: #0071e3;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 113, 227, 0.25); /* Sutil brillo azul */
+  transform: scale(1.02);
+}
